@@ -29,6 +29,7 @@ import type { Storage } from './storage';
 import { executeCommand } from './system/command';
 import { log } from './system/decorators/log';
 import { memoize } from './system/decorators/memoize';
+import { TelemetryService } from './telemetry/telemetry';
 import { GitTerminalLinkProvider } from './terminal/linkProvider';
 import { GitDocumentTracker } from './trackers/gitDocumentTracker';
 import { GitLineTracker } from './trackers/gitLineTracker';
@@ -144,6 +145,7 @@ export class Container {
 		this.ensureModeApplied();
 
 		context.subscriptions.push((this._storage = storage));
+		context.subscriptions.push((this._telemetry = new TelemetryService(this)));
 
 		context.subscriptions.push(configuration.onWillChange(this.onConfigurationChanging, this));
 
@@ -393,6 +395,11 @@ export class Container {
 		return this._homeView;
 	}
 
+	@memoize()
+	get id() {
+		return this._context.extension.id;
+	}
+
 	private readonly _insiders;
 	get insiders() {
 		return this._insiders;
@@ -527,6 +534,11 @@ export class Container {
 		}
 
 		return this._tagsView;
+	}
+
+	private readonly _telemetry: TelemetryService;
+	get telemetry(): TelemetryService {
+		return this._telemetry;
 	}
 
 	private _timelineView: TimelineWebviewView;

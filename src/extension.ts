@@ -168,6 +168,15 @@ export async function activate(context: ExtensionContext): Promise<GitLensApi | 
 	}
 
 	const mode = container.mode;
+	const data = {
+		elapsed: sw.elapsed(),
+		'config.plusFeatures.enabled': configuration.get('plusFeatures.enabled'),
+		'config.proxy': configuration.get('proxy') != null,
+		'config.showWelcomeOnInstall': configuration.get('showWelcomeOnInstall'),
+		'config.showWhatsNewAfterUpgrades': configuration.get('showWhatsNewAfterUpgrades'),
+	};
+	queueMicrotask(() => container.telemetry.sendEvent('activate', data));
+
 	sw.stop({
 		message: ` activated${exitMessage != null ? `, ${exitMessage}` : ''}${
 			mode != null ? `, mode: ${mode.name}` : ''

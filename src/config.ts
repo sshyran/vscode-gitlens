@@ -153,6 +153,9 @@ export interface Config {
 			};
 		};
 	};
+	telemetry: {
+		enabled: boolean;
+	};
 	terminalLinks: {
 		enabled: boolean;
 	};

@@ -512,6 +512,8 @@ export class SubscriptionService implements Disposable {
 				id: session.account.id,
 				platform: getPlatform(),
 				gitlensVersion: this.container.version,
+				machineId: env.machineId,
+				sessionId: env.sessionId,
 				vscodeEdition: env.appName,
 				vscodeHost: env.appHost,
 				vscodeVersion: codeVersion,
@@ -789,6 +791,32 @@ export class SubscriptionService implements Disposable {
 		this.updateContext();
 
 		if (!silent && previous != null) {
+			const data = {
+				'current.accountId': subscription.account?.id ?? '',
+				'current.actual.id': subscription.plan.actual.id,
+				'current.actual.name': subscription.plan.actual.name,
+				'current.actual.startedOn': subscription.plan.actual.startedOn,
+				'current.actual.expiresOn': subscription.plan.actual.expiresOn ?? '',
+				'current.effective.id': subscription.plan.effective.id,
+				'current.effective.name': subscription.plan.effective.name,
+				'current.effective.startedOn': subscription.plan.effective.startedOn,
+				'current.effective.expiresOn': subscription.plan.effective.expiresOn ?? '',
+
+				'previous.accountId': previous.account?.id ?? '',
+				'previous.actual.id': previous.plan.actual.id,
+				'previous.actual.name': previous.plan.actual.name,
+				'previous.actual.startedOn': previous.plan.actual.startedOn,
+				'previous.actual.expiresOn': previous.plan.actual.expiresOn ?? '',
+				'previous.effective.id': previous.plan.effective.id,
+				'previous.effective.name': previous.plan.effective.name,
+				'previous.effective.startedOn': previous.plan.effective.startedOn,
+				'previous.effective.expiresOn': previous.plan.effective.expiresOn ?? '',
+			};
+			queueMicrotask(() => {
+				this.container.telemetry.setGlobalContext('accountId', subscription!.account?.id);
+				this.container.telemetry.sendEvent('subscription/changed', data);
+			});
+
 			this._onDidChange.fire({ current: subscription, previous: previous, etag: this._etag });
 		}
 	}

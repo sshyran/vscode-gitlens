@@ -128,6 +128,28 @@ export class GitProviderService implements Disposable {
 			this._visibilityCache.clear();
 		}
 		this._onDidChangeRepositories.fire({ added: added ?? [], removed: removed ?? [], etag: this._etag });
+
+		// this.container.telemetry.sendEvent('subscription/changed', {
+		// 	accountId: subscription.account?.id ?? '',
+		// 	'actual.id': subscription.plan.actual.id,
+		// 	'actual.name': subscription.plan.actual.name,
+		// 	'actual.startedOn': subscription.plan.actual.startedOn,
+		// 	'actual.expiresOn': subscription.plan.actual.expiresOn ?? '',
+		// 	'effective.id': subscription.plan.effective.id,
+		// 	'effective.name': subscription.plan.effective.name,
+		// 	'effective.startedOn': subscription.plan.effective.startedOn,
+		// 	'effective.expiresOn': subscription.plan.effective.expiresOn ?? '',
+
+		// 	'previous.accountId': previous.account?.id ?? '',
+		// 	'previous.actual.id': previous.plan.actual.id,
+		// 	'previous.actual.name': previous.plan.actual.name,
+		// 	'previous.actual.startedOn': previous.plan.actual.startedOn,
+		// 	'previous.actual.expiresOn': previous.plan.actual.expiresOn ?? '',
+		// 	'previous.effective.id': previous.plan.effective.id,
+		// 	'previous.effective.name': previous.plan.effective.name,
+		// 	'previous.effective.startedOn': previous.plan.effective.startedOn,
+		// 	'previous.effective.expiresOn': previous.plan.effective.expiresOn ?? '',
+		// });
 	}
 
 	private readonly _onDidChangeRepository = new EventEmitter<RepositoryChangeEvent>();
